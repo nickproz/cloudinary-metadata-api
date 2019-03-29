@@ -89,13 +89,10 @@ module.exports = {
         // If the cache didn't return anything, re-fetch it
         if(!photoData) {
             // Fetch all photo data for each tag and concatenate them
-            console.info('No photo data found in the cache, re-fetching...');
             photoData = await module.exports.fetchAllPhotoData();
 
             // Save our photo data to the cache
             myCache.set(CACHE_KEY_PHOTO_DATA, photoData);
-        } else {
-            console.info('Photo data found in the cache, using cached data.');
         }
 
         return photoData;
