@@ -12,7 +12,7 @@ const URI_GET_PHOTO_DATA_FOR_TAG = '/resources/image/tags';
 const PARAMETER_MAX_RESULTS = 'max_results=500';
 
 // URLs
-const URL_GET_ALL_TAGS = `${URL_BASE}${URI_GET_ALL_TAGS}`;
+const URL_GET_ALL_TAGS = `${URL_BASE}${URI_GET_ALL_TAGS}?${PARAMETER_MAX_RESULTS}`;
 const URL_GET_PHOTO_DATA_FOR_TAG = `${URL_BASE}${URI_GET_PHOTO_DATA_FOR_TAG}`;
 const URL_PHOTO_THUMBNAIL = `http://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${CLOUDINARY_TRANSFORM_THUMBNAIL},${CLOUDINARY_TRANSFORM_AUTO_FORMAT}`;
 const URL_PHOTO = `http://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${CLOUDINARY_TRANSFORM_AUTO_FORMAT}`;
