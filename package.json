@@ -1,0 +1,12 @@
+{
+  "name": "cloudinary-express-routes",
+  "version": "1.0.0",
+  "description": "A simple module of routes to add to an Express server to interact with Cloudinary photos.",
+  "main": "index.js",
+  "author": "nick.prozorovsky@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "node-cache": "^4.2.0"
+  }
+}
