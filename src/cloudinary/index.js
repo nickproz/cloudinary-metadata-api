@@ -14,8 +14,8 @@ const PARAMETER_MAX_RESULTS = 'max_results=500';
 // URLs
 const URL_GET_ALL_TAGS = `${URL_BASE}${URI_GET_ALL_TAGS}?${PARAMETER_MAX_RESULTS}`;
 const URL_GET_PHOTO_DATA_FOR_TAG = `${URL_BASE}${URI_GET_PHOTO_DATA_FOR_TAG}`;
-const URL_PHOTO_THUMBNAIL = `http://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${CLOUDINARY_TRANSFORM_THUMBNAIL},${CLOUDINARY_TRANSFORM_AUTO_FORMAT}`;
-const URL_PHOTO = `http://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${CLOUDINARY_TRANSFORM_AUTO_FORMAT}`;
+const URL_PHOTO_THUMBNAIL = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${CLOUDINARY_TRANSFORM_THUMBNAIL},${CLOUDINARY_TRANSFORM_AUTO_FORMAT}`;
+const URL_PHOTO = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${CLOUDINARY_TRANSFORM_AUTO_FORMAT}`;
 
 // Messages
 const ERROR_MESSAGE_INTERNAL_SERVER_ERROR = 'An internal server error occurred.';
@@ -47,7 +47,7 @@ module.exports = {
      *
      * @param res - response to send data to
      */
-    clearCache: (res) => {
+    clearCache: res => {
         myCache.flushAll();
         res.status(200).send('OK');
     },
@@ -58,7 +58,7 @@ module.exports = {
      *
      * @param res - response to send data to
      */
-    getAllPhotoData: async (res) => {
+    getAllPhotoData: async res => {
         try {
             myCache.get(CACHE_KEY_PHOTO_DATA, async (err, value) => {
 
@@ -109,7 +109,7 @@ module.exports = {
 
         // Fetch all photo data for each tag and concatenate them
         return Promise.all(tags.map(tag => module.exports.fetchPhotoDataByTag(tag)))
-            .then(data => Object.assign({}, ...data));
+            .then(([data]) => data);
     },
 
     /**
@@ -129,7 +129,7 @@ module.exports = {
      * @param tagName - the tag name to fetch photo data for
      * @returns {Promise<{}>} holding photo data
      */
-    fetchPhotoDataByTag: async (tagName) => {
+    fetchPhotoDataByTag: async tagName => {
         const { data: { resources } } = await axios.get(`${URL_GET_PHOTO_DATA_FOR_TAG}/${tagName}?${PARAMETER_MAX_RESULTS}`);
 
         return {
@@ -137,39 +137,22 @@ module.exports = {
             // Sort our photos based on their public ID
                 .sort((a, b) => a.public_id.localeCompare(b.public_id))
                 // Clean up each photo
-                .map(photo => module.exports.cleanUpPhotoData(photo))
+                .filter(photo => !!photo)
+                .map(module.exports.transformPhotoData)
         };
     },
 
     /**
-     * Cleans up our photo data.
-     * Deletes unneeded keys.
-     * Adds new URL keys.
+     * Transforms our photo data.
+     * Converts thumbnail URL & photo URLs.
      *
      * @param photo - the photo data to manipulate
      * @returns the new photo object
      */
-    cleanUpPhotoData: (photo) => {
-        if(photo) {
-            // Add new URL properties
-            photo.thumbnailUrl = `${URL_PHOTO_THUMBNAIL}/${photo.public_id}`;
-            photo.photoUrl = `${URL_PHOTO}/${photo.public_id}`;
-
-            // Delete unused properties
-            delete photo.version;
-            delete photo.resource_type;
-            delete photo.type;
-            delete photo.created_at;
-            delete photo.bytes;
-            delete photo.width;
-            delete photo.height;
-            delete photo.backup;
-            delete photo.secure_url;
-            delete photo.url;
-            delete photo.format;
-            delete photo.public_id;
-        }
-
-        return photo;
+    transformPhotoData: photo => {
+        return {
+            thumbnailUrl: `${URL_PHOTO_THUMBNAIL}/${photo.public_id}`,
+            photoUrl: `${URL_PHOTO}/${photo.public_id}`
+        };
     }
 };

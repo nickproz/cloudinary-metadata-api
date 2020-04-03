@@ -20,7 +20,7 @@ module.exports = (app) => {
     });
 
     /**
-     * Gets information about all worksheets.
+     * Clears the cache.
      */
     app.get(`/${API_PREFIX_CLOUDINARY}/${URI_CLEAR_CACHE}`, (req, res) => {
         cloudinary.clearCache(res);
