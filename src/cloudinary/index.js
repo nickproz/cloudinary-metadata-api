@@ -109,7 +109,7 @@ module.exports = {
 
         // Fetch all photo data for each tag and concatenate them
         return Promise.all(tags.map(tag => module.exports.fetchPhotoDataByTag(tag)))
-            .then(([data]) => data);
+            .then(data => data);
     },
 
     /**
