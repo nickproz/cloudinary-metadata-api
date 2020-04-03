@@ -6,7 +6,7 @@
   "author": "nick.prozorovsky@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "node-cache": "^4.2.0"
   }
 }
