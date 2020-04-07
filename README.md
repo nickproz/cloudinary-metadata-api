@@ -1,4 +1,4 @@
-# cloudinary-express-routes
+# cloudinary-metadata-api
 A simple API for interacting with Cloudinary metadata. 
 Data is cached for 60 minutes, and is automatically refreshed when evicted.
 Ensure you have a named transformation called `t_gallery-thumbnail` for thumbnail images.
