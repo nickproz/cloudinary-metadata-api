@@ -1,6 +1,5 @@
 # cloudinary-metadata-api
 A simple API for interacting with Cloudinary metadata. 
-Data is cached for 60 minutes, and is automatically refreshed when evicted.
 Ensure you have a named transformation called `t_gallery-thumbnail` for thumbnail images.
 
 ## Create Cloudinary account:
@@ -12,29 +11,33 @@ Ensure you have a named transformation called `t_gallery-thumbnail` for thumbnai
     
 ## API Documentation
 
-## constructor
+### constructor
 
 Creates an instance of the class.
 
-```javascript
-import CloudinaryCacheAPI from 'cloudinary-metadata-api';
+```typescript
+import CloudinaryMetadataApi from 'cloudinary-metadata-api'; 
+import { CloudinaryCredentials } from './src/model/cloudinary-credentials.interface';
 
-const cloudinaryCloudName = '***';
-const cloudinaryApiKey = '***';
-const cloudinaryApiSecret = '***';
-const cacheTimeToLiveSeconds = 60 * 60 ;    // optional, defaults to 1 hour
-const cloudinaryCacheApi = new CloudinaryCacheAPI(cloudinaryCloudName, cloudinaryApiKey, cloudinaryApiSecret, cacheTimeToLiveSeconds);
+const credentials: CloudinaryCredentials = {
+    cloudinaryApiKey: '***',
+    cloudinaryApiSecret: '***',
+    cloudinaryCloudName: '***'
+}
+
+const api = new CloudinaryMetadataApi(credentials);
 ```
 
-## getAllPhotoData()
+### getAllPhotoData()
 
 Gets all photo data from Cloudinary.
 We fetch all tags, and then all photos for each tag.
 Data is returned in a tag -> photo data map.
-Data is cached for 60 minutes, and then automatically refreshed.
 
-```javascript
-const photoData = cloudinaryCacheApi.getAllPhotoData();
+```typescript
+import { PhotoMap } from './src/model/cloudinary-photo.interface';
+
+const photoData: PhotoMap = api.getAllPhotoData();
 console.log(photoData);
 ```
 
@@ -59,11 +62,4 @@ Example output:
       }
     ]
 }
-```
-
-## clearCache()
-Clears all cloudinary cache manually, instead of having to wait for the eviction time.
-
-```javascript
-cloudinaryCacheApi.clearCache();
 ```

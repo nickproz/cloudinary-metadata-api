@@ -1,51 +1,18 @@
 import axios from 'axios';
-import NodeCache from "node-cache";
 import * as constants from './constants';
 import { Photo, PhotoMap } from "./model/photo.interface";
 import { CloudinaryCredentials } from "./model/cloudinary-credentials.interface";
 import { CloudinaryPhoto } from "./model/cloudinary-photo.interface";
 
-export default class CloudinaryCacheApi {
+export default class CloudinaryMetadataApi {
 
-	private readonly cloudinaryCache: NodeCache;
-
-	constructor(
-		private readonly credentials: CloudinaryCredentials,
-		private readonly cacheTimeToLiveSeconds: number = constants.CACHE_TIME_TO_LIVE_SECONDS
-	) {
-		this.cloudinaryCache = new NodeCache({ stdTTL: cacheTimeToLiveSeconds, checkperiod: cacheTimeToLiveSeconds / 10 });
-	}
-
-	/**
-	 * Clears the cache for the API.
-	 */
-	public clearCache(): void {
-		return this.cloudinaryCache.flushAll();
-	}
+	constructor(private readonly credentials: CloudinaryCredentials) {}
 
 	/**
 	 * Gets all photo data.
 	 * Gets all tags, and then gets all photo data per tag.
 	 */
 	public async getAllPhotoData(): Promise<PhotoMap> {
-		let photoData: PhotoMap|undefined = this.cloudinaryCache.get(constants.CACHE_KEY_PHOTO_DATA);
-
-		// If the cache didn't return anything, re-fetch it
-		if(!photoData) {
-			// Fetch all photo data for each tag and concatenate them
-			photoData = await this.fetchAllPhotoData();
-
-			// Save our photo data to the cache
-			this.cloudinaryCache.set(constants.CACHE_KEY_PHOTO_DATA, photoData);
-		}
-
-		return photoData;
-	}
-
-	/**
-	 * Fetches all photo data from Cloudinary.
-	 */
-	private async fetchAllPhotoData(): Promise<PhotoMap> {
 		// Fetch all tags
 		const tags: string[] = await this.fetchAllTags();
 

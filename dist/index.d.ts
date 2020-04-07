@@ -1,23 +1,13 @@
 import { PhotoMap } from "./model/photo.interface";
 import { CloudinaryCredentials } from "./model/cloudinary-credentials.interface";
-export default class CloudinaryCacheApi {
+export default class CloudinaryMetadataApi {
     private readonly credentials;
-    private readonly cacheTimeToLiveSeconds;
-    private readonly cloudinaryCache;
-    constructor(credentials: CloudinaryCredentials, cacheTimeToLiveSeconds?: number);
-    /**
-     * Clears the cache for the API.
-     */
-    clearCache(): void;
+    constructor(credentials: CloudinaryCredentials);
     /**
      * Gets all photo data.
      * Gets all tags, and then gets all photo data per tag.
      */
     getAllPhotoData(): Promise<PhotoMap>;
-    /**
-     * Fetches all photo data from Cloudinary.
-     */
-    private fetchAllPhotoData;
     /**
      * Fetches all tags.
      */

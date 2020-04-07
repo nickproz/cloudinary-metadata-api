@@ -1,7 +1,7 @@
 {
   "name": "cloudinary-metadata-api",
   "version": "1.0.0",
-  "description": "A simple cached class for interacting with Cloudinary photo metadata.",
+  "description": "A simple api for interacting with Cloudinary photo metadata.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": ["dist/**/*"],
@@ -11,8 +11,7 @@
     "build": "tsc --skipLibCheck"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "node-cache": "^5.1.0"
+    "axios": "^0.19.2"
   },
   "devDependencies": {
     "typescript": "^3.8.3"
