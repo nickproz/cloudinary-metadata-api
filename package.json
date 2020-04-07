@@ -1,12 +1,20 @@
 {
-  "name": "cloudinary-express-routes",
+  "name": "cloudinary-metadata-api",
   "version": "1.0.0",
-  "description": "A simple module of routes to add to an Express server to interact with Cloudinary photos.",
-  "main": "index.js",
+  "description": "A simple cached class for interacting with Cloudinary photo metadata.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist/**/*"],
   "author": "nick.prozorovsky@gmail.com",
   "license": "ISC",
+  "scripts": {
+    "build": "tsc --skipLibCheck"
+  },
   "dependencies": {
     "axios": "^0.18.0",
-    "node-cache": "^4.2.0"
+    "node-cache": "^5.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.3"
   }
 }
