@@ -69,7 +69,7 @@ var CloudinaryCacheAPI = /** @class */ (function () {
      * Clears the cache for the API.
      */
     CloudinaryCacheAPI.prototype.clearCache = function () {
-        this.cloudinaryCache.flushAll();
+        return this.cloudinaryCache.flushAll();
     };
     /**
      * Gets all photo data.
