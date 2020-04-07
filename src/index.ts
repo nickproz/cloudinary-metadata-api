@@ -1,16 +1,16 @@
 import axios from 'axios';
+import NodeCache from "node-cache";
 import * as constants from './constants';
-import NodeCache = require("node-cache");
 import { Photo, PhotoMap } from "./model/photo.interface";
+import { CloudinaryCredentials } from "./model/cloudinary-credentials.interface";
+import { CloudinaryPhoto } from "./model/cloudinary-photo.interface";
 
-export default class CloudinaryCacheAPI {
+export default class CloudinaryCacheApi {
 
 	private readonly cloudinaryCache: NodeCache;
 
 	constructor(
-		private readonly cloudinaryApiKey: string,
-		private readonly cloudinaryApiSecret: string,
-		private readonly cloudinaryCloudName: string,
+		private readonly credentials: CloudinaryCredentials,
 		private readonly cacheTimeToLiveSeconds: number = constants.CACHE_TIME_TO_LIVE_SECONDS
 	) {
 		this.cloudinaryCache = new NodeCache({ stdTTL: cacheTimeToLiveSeconds, checkperiod: cacheTimeToLiveSeconds / 10 });
@@ -58,7 +58,8 @@ export default class CloudinaryCacheAPI {
 	 * Fetches all tags.
 	 */
 	private fetchAllTags(): Promise<string[]> {
-		return axios.get(this.generateGetAllTagsUrl()).then(({ data: { tags } }) => tags);
+		return axios.get(this.generateGetAllTagsUrl())
+			.then(({ data: { tags } }) => tags);
 	}
 
 	/**
@@ -70,10 +71,10 @@ export default class CloudinaryCacheAPI {
 
 		return {
 			[tagName]: resources
-				.filter((photo: any) => !!photo)
+				.filter((photo: CloudinaryPhoto) => !!photo)
 				// Sort our photos based on their public ID
-				.sort((a: any, b: any) => a.public_id.localeCompare(b.public_id))
-				.map((photo: any) => this.transformPhotoData(photo))
+				.sort((a: CloudinaryPhoto, b: CloudinaryPhoto) => a.public_id.localeCompare(b.public_id))
+				.map((photo: CloudinaryPhoto) => this.transformPhotoData(photo))
 		};
 	}
 
@@ -81,7 +82,7 @@ export default class CloudinaryCacheAPI {
 	 * Transforms our photo data.
 	 * Converts thumbnail URL & photo URLs.
 	 */
-	private transformPhotoData(photo: any): Photo {
+	private transformPhotoData(photo: CloudinaryPhoto): Photo {
 		return {
 			thumbnailUrl: this.generateThumbnailUrl(photo.public_id),
 			photoUrl: this.generatePhotoUrl(photo.public_id)
@@ -89,15 +90,15 @@ export default class CloudinaryCacheAPI {
 	}
 
 	private generateBaseUrl(): string {
-		return `https://${this.cloudinaryApiKey}:${this.cloudinaryApiSecret}@api.cloudinary.com/v1_1/${this.cloudinaryCloudName}`;
+		return `https://${this.credentials.cloudinaryApiKey}:${this.credentials.cloudinaryApiSecret}@api.cloudinary.com/v1_1/${this.credentials.cloudinaryCloudName}`;
 	}
 
 	private generatePhotoUrl(publicId: string): string {
-		return `https://res.cloudinary.com/${this.cloudinaryCloudName}/image/upload/${constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT}/${publicId}`;
+		return `https://res.cloudinary.com/${this.credentials.cloudinaryCloudName}/image/upload/${constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT}/${publicId}`;
 	}
 
 	private generateThumbnailUrl(publicId: string): string {
-		return `https://res.cloudinary.com/${this.cloudinaryCloudName}/image/upload/${constants.CLOUDINARY_TRANSFORM_THUMBNAIL},${constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT}/${publicId}`;
+		return `https://res.cloudinary.com/${this.credentials.cloudinaryCloudName}/image/upload/${constants.CLOUDINARY_TRANSFORM_THUMBNAIL},${constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT}/${publicId}`;
 	}
 
 	private generateGetAllTagsUrl(): string {

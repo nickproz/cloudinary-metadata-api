@@ -1,0 +1,4 @@
+# Todo
+
+### Cleanup
+* Add prettier

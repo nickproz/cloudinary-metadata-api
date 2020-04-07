@@ -54,28 +54,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = __importDefault(require("axios"));
+var node_cache_1 = __importDefault(require("node-cache"));
 var constants = __importStar(require("./constants"));
-var NodeCache = require("node-cache");
-var CloudinaryCacheAPI = /** @class */ (function () {
-    function CloudinaryCacheAPI(cloudinaryApiKey, cloudinaryApiSecret, cloudinaryCloudName, cacheTimeToLiveSeconds) {
+var CloudinaryCacheApi = /** @class */ (function () {
+    function CloudinaryCacheApi(credentials, cacheTimeToLiveSeconds) {
         if (cacheTimeToLiveSeconds === void 0) { cacheTimeToLiveSeconds = constants.CACHE_TIME_TO_LIVE_SECONDS; }
-        this.cloudinaryApiKey = cloudinaryApiKey;
-        this.cloudinaryApiSecret = cloudinaryApiSecret;
-        this.cloudinaryCloudName = cloudinaryCloudName;
+        this.credentials = credentials;
         this.cacheTimeToLiveSeconds = cacheTimeToLiveSeconds;
-        this.cloudinaryCache = new NodeCache({ stdTTL: cacheTimeToLiveSeconds, checkperiod: cacheTimeToLiveSeconds / 10 });
+        this.cloudinaryCache = new node_cache_1.default({ stdTTL: cacheTimeToLiveSeconds, checkperiod: cacheTimeToLiveSeconds / 10 });
     }
     /**
      * Clears the cache for the API.
      */
-    CloudinaryCacheAPI.prototype.clearCache = function () {
+    CloudinaryCacheApi.prototype.clearCache = function () {
         return this.cloudinaryCache.flushAll();
     };
     /**
      * Gets all photo data.
      * Gets all tags, and then gets all photo data per tag.
      */
-    CloudinaryCacheAPI.prototype.getAllPhotoData = function () {
+    CloudinaryCacheApi.prototype.getAllPhotoData = function () {
         return __awaiter(this, void 0, void 0, function () {
             var photoData;
             return __generator(this, function (_a) {
@@ -98,7 +96,7 @@ var CloudinaryCacheAPI = /** @class */ (function () {
     /**
      * Fetches all photo data from Cloudinary.
      */
-    CloudinaryCacheAPI.prototype.fetchAllPhotoData = function () {
+    CloudinaryCacheApi.prototype.fetchAllPhotoData = function () {
         return __awaiter(this, void 0, void 0, function () {
             var tags;
             var _this = this;
@@ -117,8 +115,9 @@ var CloudinaryCacheAPI = /** @class */ (function () {
     /**
      * Fetches all tags.
      */
-    CloudinaryCacheAPI.prototype.fetchAllTags = function () {
-        return axios_1.default.get(this.generateGetAllTagsUrl()).then(function (_a) {
+    CloudinaryCacheApi.prototype.fetchAllTags = function () {
+        return axios_1.default.get(this.generateGetAllTagsUrl())
+            .then(function (_a) {
             var tags = _a.data.tags;
             return tags;
         });
@@ -127,7 +126,7 @@ var CloudinaryCacheAPI = /** @class */ (function () {
      * Fetches all photo data for the given tag.
      * Returns it in a new map of tag -> photo data.
      */
-    CloudinaryCacheAPI.prototype.fetchPhotoDataByTag = function (tagName) {
+    CloudinaryCacheApi.prototype.fetchPhotoDataByTag = function (tagName) {
         return __awaiter(this, void 0, void 0, function () {
             var resources;
             var _a;
@@ -152,27 +151,27 @@ var CloudinaryCacheAPI = /** @class */ (function () {
      * Transforms our photo data.
      * Converts thumbnail URL & photo URLs.
      */
-    CloudinaryCacheAPI.prototype.transformPhotoData = function (photo) {
+    CloudinaryCacheApi.prototype.transformPhotoData = function (photo) {
         return {
             thumbnailUrl: this.generateThumbnailUrl(photo.public_id),
             photoUrl: this.generatePhotoUrl(photo.public_id)
         };
     };
-    CloudinaryCacheAPI.prototype.generateBaseUrl = function () {
-        return "https://" + this.cloudinaryApiKey + ":" + this.cloudinaryApiSecret + "@api.cloudinary.com/v1_1/" + this.cloudinaryCloudName;
+    CloudinaryCacheApi.prototype.generateBaseUrl = function () {
+        return "https://" + this.credentials.cloudinaryApiKey + ":" + this.credentials.cloudinaryApiSecret + "@api.cloudinary.com/v1_1/" + this.credentials.cloudinaryCloudName;
     };
-    CloudinaryCacheAPI.prototype.generatePhotoUrl = function (publicId) {
-        return "https://res.cloudinary.com/" + this.cloudinaryCloudName + "/image/upload/" + constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT + "/" + publicId;
+    CloudinaryCacheApi.prototype.generatePhotoUrl = function (publicId) {
+        return "https://res.cloudinary.com/" + this.credentials.cloudinaryCloudName + "/image/upload/" + constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT + "/" + publicId;
     };
-    CloudinaryCacheAPI.prototype.generateThumbnailUrl = function (publicId) {
-        return "https://res.cloudinary.com/" + this.cloudinaryCloudName + "/image/upload/" + constants.CLOUDINARY_TRANSFORM_THUMBNAIL + "," + constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT + "/" + publicId;
+    CloudinaryCacheApi.prototype.generateThumbnailUrl = function (publicId) {
+        return "https://res.cloudinary.com/" + this.credentials.cloudinaryCloudName + "/image/upload/" + constants.CLOUDINARY_TRANSFORM_THUMBNAIL + "," + constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT + "/" + publicId;
     };
-    CloudinaryCacheAPI.prototype.generateGetAllTagsUrl = function () {
+    CloudinaryCacheApi.prototype.generateGetAllTagsUrl = function () {
         return "" + this.generateBaseUrl() + constants.URI_GET_ALL_TAGS + "?" + constants.PARAMETER_MAX_RESULTS;
     };
-    CloudinaryCacheAPI.prototype.generateGetPhotoDataForTagUrl = function (tagName) {
+    CloudinaryCacheApi.prototype.generateGetPhotoDataForTagUrl = function (tagName) {
         return "" + this.generateBaseUrl() + constants.URI_GET_PHOTO_DATA_FOR_TAG + "/" + tagName + "?" + constants.PARAMETER_MAX_RESULTS;
     };
-    return CloudinaryCacheAPI;
+    return CloudinaryCacheApi;
 }());
-exports.default = CloudinaryCacheAPI;
+exports.default = CloudinaryCacheApi;

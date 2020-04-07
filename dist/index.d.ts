@@ -1,11 +1,10 @@
 import { PhotoMap } from "./model/photo.interface";
-export default class CloudinaryCacheAPI {
-    private readonly cloudinaryApiKey;
-    private readonly cloudinaryApiSecret;
-    private readonly cloudinaryCloudName;
+import { CloudinaryCredentials } from "./model/cloudinary-credentials.interface";
+export default class CloudinaryCacheApi {
+    private readonly credentials;
     private readonly cacheTimeToLiveSeconds;
     private readonly cloudinaryCache;
-    constructor(cloudinaryApiKey: string, cloudinaryApiSecret: string, cloudinaryCloudName: string, cacheTimeToLiveSeconds?: number);
+    constructor(credentials: CloudinaryCredentials, cacheTimeToLiveSeconds?: number);
     /**
      * Clears the cache for the API.
      */

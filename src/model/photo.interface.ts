@@ -4,5 +4,5 @@ export interface Photo {
 }
 
 export interface PhotoMap {
-    [key: string]: Photo
+    [key: string]: Photo[]
 }
