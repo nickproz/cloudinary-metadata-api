@@ -20,7 +20,7 @@ export default class CloudinaryCacheAPI {
 	 * Clears the cache for the API.
 	 */
 	public clearCache(): void {
-		this.cloudinaryCache.flushAll();
+		return this.cloudinaryCache.flushAll();
 	}
 
 	/**
