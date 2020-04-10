@@ -8,6 +8,9 @@ export default class CloudinaryMetadataApi {
      * Gets all tags, and then gets all photo data per tag.
      */
     getAllPhotoData(): Promise<PhotoMap>;
+    private getFolderSegmentsFromFolderPath;
+    private createFolderObjectInPhotoMap;
+    private convertPhotoMapToPhotoMapWithNestedFolders;
     /**
      * Fetches all tags.
      */

@@ -3,5 +3,5 @@ export interface Photo {
     thumbnailUrl: string;
 }
 export interface PhotoMap {
-    [key: string]: Photo[];
+    [key: string]: Photo[] | PhotoMap;
 }

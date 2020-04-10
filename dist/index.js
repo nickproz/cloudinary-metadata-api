@@ -65,19 +65,48 @@ var CloudinaryMetadataApi = /** @class */ (function () {
      */
     CloudinaryMetadataApi.prototype.getAllPhotoData = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var tags;
+            var tags, photoDataMap;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.fetchAllTags()];
                     case 1:
                         tags = _a.sent();
-                        // Fetch all photo data for each tag and concatenate them
-                        return [2 /*return*/, Promise.all(tags.map(function (tag) { return _this.fetchPhotoDataByTag(tag); }))
+                        return [4 /*yield*/, Promise.all(tags.map(function (tag) { return _this.fetchPhotoDataByTag(tag); }))
                                 .then(function (data) { return Object.assign.apply(Object, __spreadArrays([{}], data)); })];
+                    case 2:
+                        photoDataMap = _a.sent();
+                        // Unwrap any folder paths into nested objects
+                        return [2 /*return*/, this.convertPhotoMapToPhotoMapWithNestedFolders(photoDataMap)];
                 }
             });
         });
+    };
+    CloudinaryMetadataApi.prototype.getFolderSegmentsFromFolderPath = function (folderPath) {
+        return folderPath.split('/')
+            .filter(function (segment) { return !!segment; });
+    };
+    CloudinaryMetadataApi.prototype.createFolderObjectInPhotoMap = function (folderSegments, photoDataMap, photos) {
+        return folderSegments.reduce(function (updatedPhotoMap, folderSegment, index) {
+            if (index >= folderSegments.length - 1) {
+                // On last folder segment, set equal to photo array passed in
+                updatedPhotoMap[folderSegment] = photos;
+            }
+            else {
+                // Otherwise, create a new nested object if one doesn't already exist
+                updatedPhotoMap[folderSegment] = updatedPhotoMap[folderSegment] || {};
+            }
+            return updatedPhotoMap[folderSegment];
+        }, photoDataMap);
+    };
+    CloudinaryMetadataApi.prototype.convertPhotoMapToPhotoMapWithNestedFolders = function (photoDataMap) {
+        var _this = this;
+        return Object.entries(photoDataMap).reduce(function (newPhotoDataMap, _a) {
+            var folderPath = _a[0], photos = _a[1];
+            var folderSegments = _this.getFolderSegmentsFromFolderPath(folderPath);
+            _this.createFolderObjectInPhotoMap(folderSegments, newPhotoDataMap, photos);
+            return newPhotoDataMap;
+        }, {});
     };
     /**
      * Fetches all tags.

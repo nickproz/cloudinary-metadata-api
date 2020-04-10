@@ -17,8 +17,38 @@ export default class CloudinaryMetadataApi {
 		const tags: string[] = await this.fetchAllTags();
 
 		// Fetch all photo data for each tag and concatenate them
-		return Promise.all(tags.map((tag: string) => this.fetchPhotoDataByTag(tag)))
+		const photoDataMap: PhotoMap = await Promise.all(tags.map((tag: string) => this.fetchPhotoDataByTag(tag)))
 			.then((data: PhotoMap[]) => Object.assign({}, ...data));
+
+		// Unwrap any folder paths into nested objects
+		return this.convertPhotoMapToPhotoMapWithNestedFolders(photoDataMap);
+	}
+
+	private getFolderSegmentsFromFolderPath(folderPath: string): string[] {
+		return folderPath.split('/')
+			.filter(segment => !!segment);
+	}
+
+	private createFolderObjectInPhotoMap(folderSegments: string[], photoDataMap: PhotoMap, photos: Photo[]): PhotoMap {
+		return folderSegments.reduce((updatedPhotoMap: PhotoMap, folderSegment: string, index: number): PhotoMap => {
+			if(index >= folderSegments.length - 1) {
+				// On last folder segment, set equal to photo array passed in
+				updatedPhotoMap[folderSegment] = photos;
+			} else {
+				// Otherwise, create a new nested object if one doesn't already exist
+				updatedPhotoMap[folderSegment] = updatedPhotoMap[folderSegment] || {};
+			}
+
+			return <PhotoMap>updatedPhotoMap[folderSegment];
+		}, photoDataMap);
+	}
+
+	private convertPhotoMapToPhotoMapWithNestedFolders( photoDataMap: PhotoMap): PhotoMap {
+		return Object.entries(photoDataMap).reduce((newPhotoDataMap, [folderPath, photos]) => {
+			const folderSegments: string[] = this.getFolderSegmentsFromFolderPath(folderPath);
+			this.createFolderObjectInPhotoMap(folderSegments, newPhotoDataMap, <Photo[]>photos);
+			return newPhotoDataMap;
+		}, {})
 	}
 
 	/**
