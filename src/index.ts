@@ -65,14 +65,15 @@ export default class CloudinaryMetadataApi {
 	 */
 	private async fetchPhotoDataByTag(tagName: string): Promise<PhotoMap> {
 		const { data: { resources } } = await axios.get(this.generateGetPhotoDataForTagUrl(tagName));
+		const photos: Photo[] = resources
+			.filter((photo: CloudinaryPhoto) => !!photo)
+			.map((photo: CloudinaryPhoto) => this.transformPhotoData(photo))
+			// Sort naturally
+			.sort((a: Photo, b: Photo) => a.thumbnailUrl.localeCompare(b.thumbnailUrl, undefined, { numeric: true, sensitivity: 'base'}));
 
 		return {
-			[tagName]: resources
-				.filter((photo: CloudinaryPhoto) => !!photo)
-				// Sort our photos based on their public ID
-				.sort((a: CloudinaryPhoto, b: CloudinaryPhoto) => a.public_id.localeCompare(b.public_id))
-				.map((photo: CloudinaryPhoto) => this.transformPhotoData(photo))
-		};
+			[tagName]: photos
+		}
 	}
 
 	/**
