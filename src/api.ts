@@ -4,7 +4,7 @@ import { Photo, PhotoMap } from './model/photo.interface';
 import { CloudinaryCredentials } from './model/cloudinary-credentials.interface';
 import { CloudinaryPhoto } from './model/cloudinary-photo.interface';
 
-export default class CloudinaryMetadataApi {
+class CloudinaryMetadataApi {
   constructor(private readonly credentials: CloudinaryCredentials) {}
 
   /**
@@ -105,3 +105,5 @@ export default class CloudinaryMetadataApi {
     return `${this.generateBaseUrl()}${constants.URI_GET_PHOTO_DATA_FOR_TAG}/${tagName}?${constants.PARAMETER_MAX_RESULTS}`;
   }
 }
+
+export { CloudinaryMetadataApi };
