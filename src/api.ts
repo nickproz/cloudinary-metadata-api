@@ -16,7 +16,9 @@ class CloudinaryMetadataApi {
     const tags: string[] = await this.fetchAllTags();
 
     // Fetch all photo data for each tag and concatenate them
-    const photoDataMap: PhotoMap = await Promise.all(tags.map(this.fetchPhotoDataByTag)).then((data: PhotoMap[]) => Object.assign({}, ...data));
+    const photoDataMap: PhotoMap = await Promise.all(tags.map((tag) => this.fetchPhotoDataByTag(tag))).then((data: PhotoMap[]) =>
+      Object.assign({}, ...data)
+    );
 
     // Unwrap any folder paths into nested objects
     return this.convertPhotoMapToPhotoMapWithNestedFolders(photoDataMap);

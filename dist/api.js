@@ -85,12 +85,15 @@ var CloudinaryMetadataApi = /** @class */ (function () {
     CloudinaryMetadataApi.prototype.getAllPhotoData = function () {
         return __awaiter(this, void 0, void 0, function () {
             var tags, photoDataMap;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.fetchAllTags()];
                     case 1:
                         tags = _a.sent();
-                        return [4 /*yield*/, Promise.all(tags.map(this.fetchPhotoDataByTag)).then(function (data) { return Object.assign.apply(Object, __spreadArray([{}], data, false)); })];
+                        return [4 /*yield*/, Promise.all(tags.map(function (tag) { return _this.fetchPhotoDataByTag(tag); })).then(function (data) {
+                                return Object.assign.apply(Object, __spreadArray([{}], data, false));
+                            })];
                     case 2:
                         photoDataMap = _a.sent();
                         // Unwrap any folder paths into nested objects
