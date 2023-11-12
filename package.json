@@ -2,16 +2,16 @@
   "name": "cloudinary-metadata-api",
   "version": "1.0.0",
   "description": "A simple api for interacting with Cloudinary photo metadata.",
+  "license": "ISC",
+  "author": "nick.prozorovsky@gmail.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],
-  "author": "nick.prozorovsky@gmail.com",
-  "license": "ISC",
   "scripts": {
-    "clean": "rm -rf node_modules",
     "build": "tsc",
+    "clean": "rm -rf node_modules",
     "lint": "eslint 'src/**/*.{js,ts}'",
     "prettier": "prettier 'src/**/*.{js,ts}' --config './.prettierrc.js' --write"
   },
