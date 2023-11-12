@@ -1,5 +1,5 @@
-import { PhotoMap } from "./model/photo.interface";
-import { CloudinaryCredentials } from "./model/cloudinary-credentials.interface";
+import { PhotoMap } from './model/photo.interface';
+import { CloudinaryCredentials } from './model/cloudinary-credentials.interface';
 export default class CloudinaryMetadataApi {
     private readonly credentials;
     constructor(credentials: CloudinaryCredentials);

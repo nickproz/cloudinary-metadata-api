@@ -89,8 +89,7 @@ var CloudinaryMetadataApi = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.fetchAllTags()];
                     case 1:
                         tags = _a.sent();
-                        return [4 /*yield*/, Promise.all(tags.map(this.fetchPhotoDataByTag))
-                                .then(function (data) { return Object.assign.apply(Object, __spreadArray([{}], data, false)); })];
+                        return [4 /*yield*/, Promise.all(tags.map(this.fetchPhotoDataByTag)).then(function (data) { return Object.assign.apply(Object, __spreadArray([{}], data, false)); })];
                     case 2:
                         photoDataMap = _a.sent();
                         // Unwrap any folder paths into nested objects
@@ -100,8 +99,7 @@ var CloudinaryMetadataApi = /** @class */ (function () {
         });
     };
     CloudinaryMetadataApi.prototype.getFolderSegmentsFromFolderPath = function (folderPath) {
-        return folderPath.split('/')
-            .filter(function (segment) { return !!segment; });
+        return folderPath.split('/').filter(function (segment) { return !!segment; });
     };
     CloudinaryMetadataApi.prototype.createFolderObjectInPhotoMap = function (folderSegments, photoDataMap, photos) {
         return folderSegments.reduce(function (updatedPhotoMap, folderSegment, index) {
@@ -129,8 +127,7 @@ var CloudinaryMetadataApi = /** @class */ (function () {
      * Fetches all tags.
      */
     CloudinaryMetadataApi.prototype.fetchAllTags = function () {
-        return axios_1.default.get(this.generateGetAllTagsUrl())
-            .then(function (_a) {
+        return axios_1.default.get(this.generateGetAllTagsUrl()).then(function (_a) {
             var tags = _a.data.tags;
             return tags;
         });
@@ -168,7 +165,7 @@ var CloudinaryMetadataApi = /** @class */ (function () {
     CloudinaryMetadataApi.prototype.transformPhotoData = function (photo) {
         return {
             thumbnailUrl: this.generateThumbnailUrl(photo.public_id),
-            photoUrl: this.generatePhotoUrl(photo.public_id)
+            photoUrl: this.generatePhotoUrl(photo.public_id),
         };
     };
     CloudinaryMetadataApi.prototype.generateBaseUrl = function () {
