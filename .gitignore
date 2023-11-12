@@ -3,6 +3,3 @@ node_modules
 
 # IntelliJ Files
 .idea
-
-# Misc
-dist

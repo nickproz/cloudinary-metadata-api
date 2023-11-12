@@ -1,6 +1,6 @@
 # cloudinary-metadata-api
 A simple API for interacting with Cloudinary metadata. 
-Ensure you have a named transformation called `t_gallery-thumbnail` for thumbnail images.
+Ensure you have a named transformation called `t_gallery-thumbnail` for thumbnail images. This package must commit the dist folder as it is pulled in directly from Github and doesn't get built correctly otherwise.
 
 ## Create Cloudinary account:
 * Create a Cloudinary account [here](https://cloudinary.com/console)
