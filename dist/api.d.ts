@@ -27,7 +27,6 @@ declare class CloudinaryMetadataApi {
     private transformPhotoData;
     private generateBaseUrl;
     private generatePhotoUrl;
-    private generateThumbnailUrl;
     private generateGetAllTagsUrl;
     private generateGetPhotoDataForTagUrl;
 }

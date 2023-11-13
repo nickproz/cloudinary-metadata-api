@@ -1,7 +1,4 @@
-export interface Photo {
-    photoUrl: string;
-    thumbnailUrl: string;
-}
+export type Photo = string;
 export interface PhotoMap {
     [key: string]: Photo[] | PhotoMap;
 }

@@ -154,7 +154,7 @@ var CloudinaryMetadataApi = /** @class */ (function () {
                             .filter(function (photo) { return !!photo; })
                             .map(function (photo) { return _this.transformPhotoData(photo); })
                             // Sort naturally
-                            .sort(function (a, b) { return a.thumbnailUrl.localeCompare(b.thumbnailUrl, undefined, { numeric: true, sensitivity: 'base' }); });
+                            .sort(function (a, b) { return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }); });
                         return [2 /*return*/, (_a = {},
                                 _a[tagName] = photos,
                                 _a)];
@@ -167,19 +167,13 @@ var CloudinaryMetadataApi = /** @class */ (function () {
      * Converts thumbnail URL & photo URLs.
      */
     CloudinaryMetadataApi.prototype.transformPhotoData = function (photo) {
-        return {
-            thumbnailUrl: this.generateThumbnailUrl(photo.public_id),
-            photoUrl: this.generatePhotoUrl(photo.public_id),
-        };
+        return this.generatePhotoUrl(photo.public_id);
     };
     CloudinaryMetadataApi.prototype.generateBaseUrl = function () {
         return "https://".concat(this.credentials.cloudinaryApiKey, ":").concat(this.credentials.cloudinaryApiSecret, "@api.cloudinary.com/v1_1/").concat(this.credentials.cloudinaryCloudName);
     };
     CloudinaryMetadataApi.prototype.generatePhotoUrl = function (publicId) {
         return "https://res.cloudinary.com/".concat(this.credentials.cloudinaryCloudName, "/image/upload/").concat(constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT, "/").concat(publicId);
-    };
-    CloudinaryMetadataApi.prototype.generateThumbnailUrl = function (publicId) {
-        return "https://res.cloudinary.com/".concat(this.credentials.cloudinaryCloudName, "/image/upload/").concat(constants.CLOUDINARY_TRANSFORM_THUMBNAIL, ",").concat(constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT, "/").concat(publicId);
     };
     CloudinaryMetadataApi.prototype.generateGetAllTagsUrl = function () {
         return "".concat(this.generateBaseUrl()).concat(constants.URI_GET_ALL_TAGS, "?").concat(constants.PARAMETER_MAX_RESULTS);

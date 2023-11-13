@@ -69,7 +69,7 @@ class CloudinaryMetadataApi {
       .filter((photo: CloudinaryPhoto) => !!photo)
       .map((photo: CloudinaryPhoto) => this.transformPhotoData(photo))
       // Sort naturally
-      .sort((a: Photo, b: Photo) => a.thumbnailUrl.localeCompare(b.thumbnailUrl, undefined, { numeric: true, sensitivity: 'base' }));
+      .sort((a: Photo, b: Photo) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
     return {
       [tagName]: photos,
@@ -81,10 +81,7 @@ class CloudinaryMetadataApi {
    * Converts thumbnail URL & photo URLs.
    */
   private transformPhotoData(photo: CloudinaryPhoto): Photo {
-    return {
-      thumbnailUrl: this.generateThumbnailUrl(photo.public_id),
-      photoUrl: this.generatePhotoUrl(photo.public_id),
-    };
+    return this.generatePhotoUrl(photo.public_id);
   }
 
   private generateBaseUrl(): string {
@@ -93,10 +90,6 @@ class CloudinaryMetadataApi {
 
   private generatePhotoUrl(publicId: string): string {
     return `https://res.cloudinary.com/${this.credentials.cloudinaryCloudName}/image/upload/${constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT}/${publicId}`;
-  }
-
-  private generateThumbnailUrl(publicId: string): string {
-    return `https://res.cloudinary.com/${this.credentials.cloudinaryCloudName}/image/upload/${constants.CLOUDINARY_TRANSFORM_THUMBNAIL},${constants.CLOUDINARY_TRANSFORM_AUTO_FORMAT}/${publicId}`;
   }
 
   private generateGetAllTagsUrl(): string {
